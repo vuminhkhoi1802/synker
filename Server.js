@@ -35,11 +35,12 @@ app.get('/', function (req, res) {
 app.get('/get_from_db', function (req, res) {
   connection.query("SELECT * from content", function (err, rows) {
     var fs = require('fs');
-    fs.writeFile('content.json', JSON.stringify(rows), function(err) {
+    fs.writeFile('./js/content.json', JSON.stringify(rows), function(err) {
       if (err) throw err;
       console.log('Saved to JSON file')
     })
     res.json(rows[0]);
+    
   });
 });
 
@@ -90,3 +91,4 @@ app.listen(3000, function () {
   console.log("I am live at PORT 3000.");
 
 });
+

@@ -13,9 +13,9 @@
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
-
     // To do: Read JSON method & output data from json to indexed db
-    
+
+
     var request = indexedDB.open("synker");
     var db;
     request.onupgradeneeded = function () {
@@ -26,7 +26,6 @@
         });
         var ourindex = store.createIndex("content", "user_content");
     };
-
     request.onsuccess = function () {
         db = request.result;
     };
@@ -38,7 +37,6 @@
             content: data,
             ID: 1
         });
-
     }
 
     function addinsql(data) {
@@ -75,7 +73,6 @@
         var self = this;
         var tx = db.transaction("notes", "readonly");
         var store = tx.objectStore("notes");
-
         var request = store.openCursor();
         request.onsuccess = function () {
             var cursor = request.result;
@@ -88,9 +85,11 @@
     }
 </script>
 <script>
+    $.getJSON("content.json", function (json) {
+        console.log(json); // this will show the info it in firebug console
+    });
     $(document).ready(function () {
         $("#message").empty().html("<b>We are good ! Keep writing.</b>").css("color", "green");
-
         $.get("/get_from_db", function (data) {
             $("#my_container").val(data.content);
         });
@@ -115,7 +114,6 @@
                     "red");
             }
         }, 10000);
-
         $("#save").click(function () {
             var content = $("#my_container").val();
             var control = check_alive();
@@ -128,6 +126,7 @@
                 addData(content);
             }
         });
+
 
     });
 </script>
