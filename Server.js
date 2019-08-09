@@ -1,6 +1,6 @@
-var express = require("express");
-var mysql = require("mysql");
-var app = express();
+const express = require("express");
+const mysql = require("mysql");
+const app = express();
 
 
 var connection = mysql.createConnection({
@@ -9,6 +9,7 @@ var connection = mysql.createConnection({
   password: 'Trang19082008!',
   database: 'synker',
 })
+
 
 connection.connect((err) => {
   if (err) {
@@ -29,18 +30,19 @@ app.engine('html', require('ejs').renderFile);
 
 
 app.get('/', function (req, res) {
+  6
   res.render('index.html');
 });
 
 app.get('/get_from_db', function (req, res) {
   connection.query("SELECT * from content", function (err, rows) {
-    var fs = require('fs');
-    fs.writeFile('./js/content.json', JSON.stringify(rows), function(err) {
-      if (err) throw err;
-      console.log('Saved to JSON file')
-    })
-    res.json(rows[0]);
-    
+    // var fs = require('fs');
+    // fs.writeFile('./js/content.json', JSON.stringify(rows), function(err) {
+    //   if (err) throw err;
+    //   console.log('Saved to JSON file')
+    // })
+    // res.json(rows[0]);
+
   });
 });
 
@@ -86,9 +88,10 @@ app.get('/update', function (req, res) {
   });
 });
 
+app.get('/')
+
 app.listen(3000, function () {
 
   console.log("I am live at PORT 3000.");
 
 });
-

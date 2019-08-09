@@ -49,6 +49,7 @@
         });
     }
 
+
     function check_alive() {
         var a;
         $.ajax({
@@ -62,6 +63,7 @@
             },
             error: function (data) {
                 //Go in the indexDB
+                console.log("MySQL us DOWN")
                 a = 1;
             }
         });
@@ -71,7 +73,7 @@
     function getalldata() {
         var all_content;
         var self = this;
-        var tx = db.transaction("notes", "readonly");
+        var tx = db.transaction("notes", "readwrite");
         var store = tx.objectStore("notes");
         var request = store.openCursor();
         request.onsuccess = function () {
@@ -87,7 +89,23 @@
 <script>
     $.getJSON("content.json", function (json) {
         console.log(json); // this will show the info it in firebug console
+        // var content = $("#my_container").val();
+        // var control = check_alive();
+        // if (control == 0) {
+        //     console.log("Put data in Mysql");
+        //     // addinsql(content);
+        //     addData(json);
+        // } else {
+        //     console.log("Putting in indexDB.");
+        //     addData(json);
+        // }
     });
+    // var transaction = db.transaction([STORE], IDBTransaction.READ_WRITE);
+    // var objstore = transaction.objectStore(STORE);
+
+    // for (i = 0 ; i < json.length; i++) {
+    //     objstore.put(json[i]);
+    // }
     $(document).ready(function () {
         $("#message").empty().html("<b>We are good ! Keep writing.</b>").css("color", "green");
         $.get("/get_from_db", function (data) {
@@ -126,6 +144,7 @@
                 addData(content);
             }
         });
+
 
 
     });
