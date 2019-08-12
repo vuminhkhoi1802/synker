@@ -1,7 +1,8 @@
 const express = require("express");
 const mysql = require("mysql");
 const app = express();
-
+const bodyParser = require('body-parser')
+const { getData } = require('./routes/index')
 
 var connection = mysql.createConnection({
   host: 'localhost',
@@ -29,20 +30,16 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 
-app.get('/', function (req, res) {
-  6
-  res.render('index.html');
-});
+// app.get('/', function (req, res) {
+//   res.render('index.html');
+// });
+
+
+app.get('/', getData);
+
 
 app.get('/get_from_db', function (req, res) {
   connection.query("SELECT * from content", function (err, rows) {
-    // var fs = require('fs');
-    // fs.writeFile('./js/content.json', JSON.stringify(rows), function(err) {
-    //   if (err) throw err;
-    //   console.log('Saved to JSON file')
-    // })
-    // res.json(rows[0]);
-
   });
 });
 

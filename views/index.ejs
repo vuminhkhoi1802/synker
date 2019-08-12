@@ -5,17 +5,39 @@
 </head>
 
 <body>
+    <div id="table" class="table-wrapper">
+        <% if (content.length > 0) {%>
+
+        <table class="table table-hovered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% content.forEach((content, index) => { %>
+                <tr>
+                    <th scope="row"><%= content.user_id %></th>
+                    <td id="my_table_content"><%= content.content %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <% } else { %>
+        <p class="text-center">No content found</p>
+        <% } %>
+    </div>
+    <br><br>
     <div id="container">
         <textarea rows="20" cols="120" id="my_container"></textarea><br><br>
         <input type="button" id="save" value="Save"></input><br><br>
+        <input type="button" id="sync" value="Sync"></input><br><br>
         <span id="message"></span>
     </div>
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
-    // To do: Read JSON method & output data from json to indexed db
-
-
     var request = indexedDB.open("synker");
     var db;
     request.onupgradeneeded = function () {
@@ -63,7 +85,7 @@
             },
             error: function (data) {
                 //Go in the indexDB
-                console.log("MySQL us DOWN")
+                console.log("MySQL is DOWN")
                 a = 1;
             }
         });
@@ -87,31 +109,12 @@
     }
 </script>
 <script>
-    $.getJSON("content.json", function (json) {
-        console.log(json); // this will show the info it in firebug console
-        // var content = $("#my_container").val();
-        // var control = check_alive();
-        // if (control == 0) {
-        //     console.log("Put data in Mysql");
-        //     // addinsql(content);
-        //     addData(json);
-        // } else {
-        //     console.log("Putting in indexDB.");
-        //     addData(json);
-        // }
-    });
-    // var transaction = db.transaction([STORE], IDBTransaction.READ_WRITE);
-    // var objstore = transaction.objectStore(STORE);
-
-    // for (i = 0 ; i < json.length; i++) {
-    //     objstore.put(json[i]);
-    // }
     $(document).ready(function () {
         $("#message").empty().html("<b>We are good ! Keep writing.</b>").css("color", "green");
-        $.get("/get_from_db", function (data) {
+        $.get("/", function (data) {
             $("#my_container").val(data.content);
         });
-        setInterval(function () {
+        function tmp() {
             if (check_alive() == 0) {
                 $("#message").empty().html("<b>We are good ! Keep writing.</b>").css("color", "green");
                 //get all data from indexDB and update it in MySQL.
@@ -131,9 +134,25 @@
                     "<b>Connection lost ! keep writing. We will deal with it.</b>").css("color",
                     "red");
             }
-        }, 10000);
+        }
+        // setInterval(function () {
+            
+        // }, 10000);
+        $('#sync').click(function () {
+            var content = <%- JSON.stringify(content) %>;
+            data = content[0].content;
+            console.log(data);
+            var control = check_alive();
+            if (control == 0) {
+                console.log("Resync with IndexedDB from MySQL");
+                addData(data);
+            } else {
+                console.log("Connection is severed!")
+            }
+        });
         $("#save").click(function () {
             var content = $("#my_container").val();
+            console.log(content);
             var control = check_alive();
             if (control == 0) {
                 console.log("Put data in Mysql");
@@ -142,8 +161,10 @@
             } else {
                 console.log("Putting in indexDB.");
                 addData(content);
+
             }
         });
+
 
 
 
